@@ -1,24 +1,16 @@
-﻿using CQRS.Queries.Interfaces;
+﻿using Application.Entities;
+using CQRS.Queries.Interfaces;
 
 namespace Application.Queries
-{
-    #region Records
+{ 
+    public record GetWeatherForecastQuery();
 
-    public record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-    {
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-
-    public record WeatherForecastQuery();
-
-    #endregion
-
-    public class WeatherForecastQueryHandler : IQueryHandler<WeatherForecastQuery, IEnumerable<WeatherForecast>>
+    public class WeatherForecastQueryHandler : IQueryHandler<GetWeatherForecastQuery, IEnumerable<WeatherForecast>>
     {
         private readonly string[] _summaries;
         public WeatherForecastQueryHandler() => _summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
 
-        public async Task<IEnumerable<WeatherForecast>> Handle(WeatherForecastQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<WeatherForecast>> Handle(GetWeatherForecastQuery query, CancellationToken cancellationToken)
         {
             var forecast = Enumerable.Range(1, 5).Select(index =>
             new WeatherForecast

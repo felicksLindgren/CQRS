@@ -1,3 +1,5 @@
+using Application.Commands;
+using Application.Entities;
 using Application.Queries;
 using CQRS.Commands;
 using CQRS.Commands.Interfaces;
@@ -42,9 +44,18 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.MapGet("/weatherforecast", async (IQueryDispatcher dispatcher, CancellationToken cancellationToken) =>
 {
-    var query = new WeatherForecastQuery();
+    var query = new GetWeatherForecastQuery();
 
-    var forecast = await dispatcher.Dispatch<WeatherForecastQuery, IEnumerable<WeatherForecast>>(query, cancellationToken);
+    var forecast = await dispatcher.Dispatch<GetWeatherForecastQuery, IEnumerable<WeatherForecast>>(query, cancellationToken);
+
+    return forecast;
+});
+
+app.MapPost("/weatherforecast", async (ICommandDispatcher dispatcher, CancellationToken cancellationToken) =>
+{
+    var command = new AddWeatherForecastCommand(DateTime.Now, 32, "Freezing");
+
+    var forecast = await dispatcher.Dispatch<AddWeatherForecastCommand, WeatherForecast>(command, cancellationToken);
 
     return forecast;
 });
